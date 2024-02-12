@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --ntasks 1
+#SBATCH --time 3-0
+#SBATCH -c 4
+#SBATCH --mem 40g
+#SBATCH --output graphvae-%j.out
+#SBATCH --gres=gpu:a30:1
+                
+ml Python 
+python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.005 --save_name "kl_weight long epoch"
+ 

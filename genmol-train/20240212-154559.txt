@@ -1,0 +1,23 @@
+Model Parameters:
+	data_path : data/chembl24_canon_train.pickle
+	max_len : 16
+	batch : 128
+	d_model : 512
+	d_latent : 256
+	d_ff : 1024
+	n_heads : 8
+	n_layers : 1
+	dropout : 0.5
+	lr : 0.0005
+	n_epochs : 30
+	kl_start : 0
+	kl_w_start : 0.0005
+	kl_w_end : 0.005
+	save_name : test
+Epoch: 1 --- Train Loss: 6.447625
+Validity: 100.00% --- Uniqueness: 0.00% --- Novelty: 100.00%1. CCCCCCCCCCCCCCCC
+Epoch: 2 --- Train Loss: 2.135355
+Validity: 100.00% --- Uniqueness: 0.00% --- Novelty: 100.00%1. CCCCCCCCCCCCCCCC
+Epoch: 3 --- Train Loss: 1.971127
+Validity: 100.00% --- Uniqueness: 0.01% --- Novelty: 100.00%1. NCCCCCCCCCCCCCCC
+2. CCCCCCCCCCCCCCCC
