@@ -9,6 +9,8 @@ import data
 from data import ProcessData
 import model.base
 from model.base import Transformer
+import model.multiheads 
+from model.multiheads import Transformer as TransformerMultiHead
 import utils 
 from utils import monotonic_annealer, get_mask, parallel_f, seed_torch
 import rdkit 
@@ -52,29 +54,15 @@ parser.add_argument('--save_name', type=str, default='your save name')
 arg = parser.parse_args()
 
 
-# python train.py --d_model 512 --d_latent 512 --d_ff 1024 --save_name "dimension"
-# python train.py --d_model 512 --d_latent 256 --d_ff 1024 --save_name "dimension"
-# python train.py --d_model 256 --d_latent 256 --d_ff 512 --save_name "dimension"
-# python train.py --d_model 256 --d_latent 128 --d_ff 512 --save_name "dimension"
-
-# python train.py --kl_w_start 0.0005 --kl_w_end 0.005 --save_name "kl_weight"
-# python train.py --kl_w_start 0.0005 --kl_w_end 0.01 --save_name "kl_weight"
-# python train.py --kl_w_start 0.0005 --kl_w_end 0.05 --save_name "kl_weight"
-
-# python train.py --kl_w_start 0.001 --kl_w_end 0.005 --save_name "kl_weight"
-# python train.py --kl_w_start 0.001 --kl_w_end 0.01 --save_name "kl_weight"
-# python train.py --kl_w_start 0.001 --kl_w_end 0.05 --save_name "kl_weight"
-
-# python train.py --n_epochs 40 --kl_w_start 0.0005 --kl_w_end 0.005 --save_name "kl_weight long epoch"
-# python train.py --n_epochs 40 --kl_w_start 0.0005 --kl_w_end 0.01 --save_name "kl_weight long epoch"
-# python train.py --n_epochs 40 --kl_w_start 0.0005 --kl_w_end 0.05 --save_name "kl_weight long epoch"
-
-# python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.005 --save_name "kl_weight long epoch"
-# python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.01 --save_name "kl_weight long epoch"
-# python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.05 --save_name "kl_weight long epoch"
 
 
-writer = SummaryWriter(f'{arg.save_name}/d_model {arg.d_model} d_latent {arg.d_latent} d_ff {arg.d_ff} head {arg.n_heads} layer {arg.n_layers} drop {arg.dropout} lr {arg.lr} epoch {arg.n_epochs} start {arg.kl_start} w_start {arg.kl_w_start} w_end {arg.kl_w_end} max_len {arg.max_len}')
+
+# python train.py --n_epochs 40 --kl_w_start 0.0005 --kl_w_end 0.005 --save_name "best"
+# python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.005 --save_name "best"
+
+
+
+writer = SummaryWriter(f"{arg.save_name}/d_model {arg.d_model} d_latent {arg.d_latent} d_ff {arg.d_ff} head {arg.n_heads} layer {arg.n_layers} drop {arg.dropout} lr {arg.lr} epoch {arg.n_epochs} start {arg.kl_start} w_start {arg.kl_w_start} w_end {arg.kl_w_end} max_len {arg.max_len}")
 
 print('\nArguments:')
 for name, value in arg.__dict__.items() :
@@ -95,7 +83,7 @@ print(f'\nGraph Vocab:\n\t {gvocab}')
 train_loader = gDataLoader(data_list, batch_size=arg.batch, shuffle=True)  
 
 
-model = Transformer(arg.d_model, arg.d_latent, arg.d_ff, arg.n_heads, arg.n_layers, arg.dropout, vocab, gvocab).to(device)
+model = TransformerMultiHead(arg.d_model, arg.d_latent, arg.d_ff, arg.n_heads, arg.n_layers, arg.dropout, vocab, gvocab).to(device)
 optim = torch.optim.Adam(model.parameters(), lr=arg.lr, weight_decay=1e-6)
 def loss_fn(pred, tgt, mu, sigma, beta) :
     reconstruction_loss = F.nll_loss(pred.reshape(-1, len(vocab)), tgt.reshape(-1), ignore_index=vocab['<PAD>'])
@@ -120,8 +108,8 @@ for epoch in range(arg.n_epochs) :
     beta = annealer[epoch]
 
     model.train()
-    for src in train_loader :
-    # for src in tqdm(train_loader, desc=f'Epoch {epoch + 1}/{arg.n_epochs} - Train') : 
+    # for src in train_loader :
+    for src in tqdm(train_loader, desc=f'Epoch {epoch + 1}/{arg.n_epochs} - Train') : 
         src = src.to(device)
         tgt = src.clone().smi.to(device)
         tgt_mask = get_mask(tgt[:, :-1], vocab) 
@@ -137,8 +125,8 @@ for epoch in range(arg.n_epochs) :
     model.eval()
     gen_mol = torch.empty(0).to(device)
     with torch.no_grad() : 
-        for _ in range(60) :
-        # for _ in tqdm(range(60), desc='Generating Molecules...') : 
+        # for _ in range(60) :
+        for _ in tqdm(range(60), desc='Generating Molecules...') : 
             z = torch.randn(500, arg.d_latent).to(device)
             tgt = torch.zeros(500, 1, dtype=torch.long).to(device)
 
