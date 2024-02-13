@@ -122,7 +122,7 @@ class EncoderLayer(nn.Module) :
         super(EncoderLayer, self).__init__()
         self.d_model = d_model
         self.norm1 = LayerNorm(d_model) 
-        self.attn = gnn.GATConv(d_model, d_model, heads = 1, dropout = dropout)
+        self.attn = gnn.GATConv(d_model, d_model//n_heads, n_heads, dropout = dropout)
         self.drop1 = nn.Dropout(dropout)
 
         self.norm2 = LayerNorm(d_model)
@@ -202,7 +202,7 @@ class Transformer(nn.Module):
         ff = PositionwiseFeedForward(d_model, d_ff)
         position = PositionalEncoding(d_model, dropout)
 
-        self.encoder = Encoder(EncoderLayer(d_model, c(attn), c(ff), dropout), num_layer, d_latent)
+        self.encoder = Encoder(EncoderLayer(d_model, num_head, c(ff), dropout), num_layer, d_latent)
         self.decoder = Decoder(DecoderLayer(d_model, c(attn), c(attn), c(ff), dropout), num_layer, d_latent)
 
         self.src_embedding = nn.Embedding(len(gvocab), d_model)
