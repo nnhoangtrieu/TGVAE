@@ -10,7 +10,7 @@ This repo contains the PyTorch and Pytorch Geometric implementation of VAE with 
 ## Training
 The default configuration of the model is:
 
-**d_model**: 512 | **d_latent**: 256 | **d_ff**: 1024 | **num_head**: 8 | **num_layer**: 8 | **dropout**: 0.5 | **lr**: 0.0003 | **epochs**: 32 | **batch_size**: 128 | **max_len**: 30 | **kl_type**: monotonic | **kl_start**: 0 | **kl_w_start**: 0 | **kl_w_end**: 0.0003 | **kl_cycle**: 4 | **kl_ratio**: 0.9 | **name_checkpoint**: model | **epoch_checkpoint**: -1 
+**data_path**: "data/chembl24_canon_train.pickle" | **max_len**: 30 |**batch**: 128 | **d_model**: 512 | **d_latent**: 256 | **d_ff**: 1024 | **n_heads**: 8 | **n_layers**: 8 | **dropout**: 0.5 | **lr**: 0.0003 | **n_epochs**: 32 |  | **kl_start**: 0 | **kl_w_start**: 0 | **kl_w_end**: 0.0003 | **kl_cycle**: 4 | **kl_ratio**: 0.9 | **save_name**: "your save name"
 
 - The dimension of model (d_model) will be use throughout the Transformer Layer and  will be increased in the inner Feed Forward Layer (d_ff). Encoder will finally compress the the input to latent space (d_latent). 
 
