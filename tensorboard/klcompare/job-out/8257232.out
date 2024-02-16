@@ -1,0 +1,146 @@
+2024-02-15 07:11:00.708971: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2024-02-15 07:11:00.709033: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2024-02-15 07:11:00.710750: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-02-15 07:11:00.716963: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-02-15 07:11:01.524554: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+
+Arguments:
+	data_path: data/moses_train.txt
+	max_len: 30
+	batch: 128
+	d_model: 512
+	d_latent: 256
+	d_ff: 1024
+	e_heads: 1
+	d_heads: 8
+	n_layers: 8
+	dropout: 0.5
+	lr: 0.0005
+	n_epochs: 100
+	kl_type: cyclic
+	kl_w_start: 0.0001
+	kl_w_end: 0.001
+	kl_cycle: 6
+	kl_ratio: 1.0
+	save_name: klcompare
+
+Number of data: 88192
+
+SMILES Vocab:
+	 {'<START>': 0, '<END>': 1, '<PAD>': 2, 'C': 3, 'O': 4, 'c': 5, '1': 6, '(': 7, '=': 8, ')': 9, 'N': 10, 'n': 11, '2': 12, 'F': 13, 'Cl': 14, 'Br': 15, '#': 16, '3': 17, 'S': 18, 'o': 19, '-': 20, 's': 21, '[nH]': 22, '4': 23}
+
+Graph Vocab:
+	 {'C': 0, 'O': 1, 'N': 2, 'F': 3, 'Cl': 4, 'Br': 5, 'S': 6}
+
+
+KL Annealer: [0.0001   0.000154 0.000208 0.000262 0.000316 0.00037  0.000424 0.000478
+ 0.000532 0.000586 0.00064  0.000694 0.000748 0.000802 0.000856 0.00091
+ 0.0001   0.000154 0.000208 0.000262 0.000316 0.00037  0.000424 0.000478
+ 0.000532 0.000586 0.00064  0.000694 0.000748 0.000802 0.000856 0.00091
+ 0.000964 0.0001   0.000154 0.000208 0.000262 0.000316 0.00037  0.000424
+ 0.000478 0.000532 0.000586 0.00064  0.000694 0.000748 0.000802 0.000856
+ 0.00091  0.000964 0.0001   0.000154 0.000208 0.000262 0.000316 0.00037
+ 0.000424 0.000478 0.000532 0.000586 0.00064  0.000694 0.000748 0.000802
+ 0.000856 0.00091  0.0001   0.000154 0.000208 0.000262 0.000316 0.00037
+ 0.000424 0.000478 0.000532 0.000586 0.00064  0.000694 0.000748 0.000802
+ 0.000856 0.00091  0.000964 0.0001   0.000154 0.000208 0.000262 0.000316
+ 0.00037  0.000424 0.000478 0.000532 0.000586 0.00064  0.000694 0.000748
+ 0.000802 0.000856 0.00091  0.000964]
+
+
+
+
+#########################################################################
+######################### START TRAINING ################################
+#########################################################################
+
+
+
+
+{'valid': 0.46853333333333336, 'unique@1000': 0.29, 'unique@10000': 0.1156, 'FCD/Test': 35.43117163299033, 'SNN/Test': 0.605084925593133, 'Frag/Test': 0.7870111777848937, 'Scaf/Test': 0.1398778180068102, 'FCD/TestSF': 36.357467536457904, 'SNN/TestSF': 0.56590293864542, 'Frag/TestSF': 0.7773587423103681, 'Scaf/TestSF': 0.002636807952093978, 'IntDiv': 0.5941872945172322, 'IntDiv2': 0.5633510643226, 'Filters': 0.9931701764371087, 'logP': 0.3424348235835792, 'SA': 0.4640112252643792, 'QED': 0.199378817569798, 'weight': 14.359101108244339, 'Novelty': 0.9289813486370158}
+Epoch: 31:
+	Train Loss: 0.738 --- Reconstruction Loss: 0.520 --- KL Loss: 255.567 --- Beta: 0.000856
+	Validity: 0.47% --- Uniquene@1000: 0.29% --- Unique@10000: 0.12%
+
+{'valid': 0.5938333333333333, 'unique@1000': 0.34, 'unique@10000': 0.1289, 'FCD/Test': 32.365544966059616, 'SNN/Test': 0.6060679833590567, 'Frag/Test': 0.801288892387799, 'Scaf/Test': 0.051857108192865375, 'FCD/TestSF': 33.368734725836745, 'SNN/TestSF': 0.5484085359534554, 'Frag/TestSF': 0.7927412491519945, 'Scaf/TestSF': 0.02859111530226688, 'IntDiv': 0.609753996807681, 'IntDiv2': 0.5807262091767326, 'Filters': 0.9934325007016559, 'logP': 0.2588442079565801, 'SA': 0.43402596400867455, 'QED': 0.1428670027696794, 'weight': 14.973355888390422, 'Novelty': 0.905328798185941}
+Epoch: 32:
+	Train Loss: 0.636 --- Reconstruction Loss: 0.503 --- KL Loss: 145.941 --- Beta: 0.000910
+	Validity: 0.59% --- Uniquene@1000: 0.34% --- Unique@10000: 0.13%
+
+{'valid': 0.81, 'unique@1000': 0.47, 'unique@10000': 0.199, 'FCD/Test': 27.214274094067804, 'SNN/Test': 0.6205588150061208, 'Frag/Test': 0.8110267455343388, 'Scaf/Test': 0.17921216935345607, 'FCD/TestSF': 28.303637297954054, 'SNN/TestSF': 0.5581813789125333, 'Frag/TestSF': 0.8006857701746695, 'Scaf/TestSF': 0.009813227665530833, 'IntDiv': 0.6908787941462616, 'IntDiv2': 0.6642040481479687, 'Filters': 0.9919341563786008, 'logP': 0.1790249261929574, 'SA': 0.4005590011168802, 'QED': 0.14047118544349593, 'weight': 15.439959023259089, 'Novelty': 0.9061107574793126}
+Epoch: 33:
+	Train Loss: 0.565 --- Reconstruction Loss: 0.496 --- KL Loss: 71.234 --- Beta: 0.000964
+	Validity: 0.81% --- Uniquene@1000: 0.47% --- Unique@10000: 0.20%
+
+{'valid': 0.5633, 'unique@1000': 0.416, 'unique@10000': 0.1603, 'FCD/Test': 27.52384902632805, 'SNN/Test': 0.5954712881647741, 'Frag/Test': 0.8366849666261829, 'Scaf/Test': 0.11667719567690038, 'FCD/TestSF': 28.384472320601276, 'SNN/TestSF': 0.5333264919295594, 'Frag/TestSF': 0.8242469016826935, 'Scaf/TestSF': 0.0006869495765369216, 'IntDiv': 0.7047917372210144, 'IntDiv2': 0.675174144669455, 'Filters': 0.997159595242322, 'logP': 0.23371498076907765, 'SA': 0.31206907902101294, 'QED': 0.10837937828947948, 'weight': 18.4135823006653, 'Novelty': 0.9204819277108434}
+Epoch: 34:
+	Train Loss: 0.492 --- Reconstruction Loss: 0.484 --- KL Loss: 86.366 --- Beta: 0.000100
+	Validity: 0.56% --- Uniquene@1000: 0.42% --- Unique@10000: 0.16%
+
+{'valid': 0.6971666666666667, 'unique@1000': 0.476, 'unique@10000': 0.1899, 'FCD/Test': 24.92340435755966, 'SNN/Test': 0.6419514413858013, 'Frag/Test': 0.8716670880552833, 'Scaf/Test': 0.2106457151536003, 'FCD/TestSF': 26.059210253022712, 'SNN/TestSF': 0.5273571686598778, 'Frag/TestSF': 0.8599614504507236, 'Scaf/TestSF': 0.014975171935247111, 'IntDiv': 0.7403342176766011, 'IntDiv2': 0.7124264637234297, 'Filters': 0.9962706191728424, 'logP': 0.39864632712280745, 'SA': 0.33207877455965584, 'QED': 0.08058913639790892, 'weight': 18.865651930749006, 'Novelty': 0.8704453441295547}
+Epoch: 35:
+	Train Loss: 0.488 --- Reconstruction Loss: 0.474 --- KL Loss: 91.712 --- Beta: 0.000154
+	Validity: 0.70% --- Uniquene@1000: 0.48% --- Unique@10000: 0.19%
+
+{'valid': 0.8115666666666667, 'unique@1000': 0.479, 'unique@10000': 0.1946, 'FCD/Test': 27.05679525506183, 'SNN/Test': 0.6422960831665399, 'Frag/Test': 0.8385676300443345, 'Scaf/Test': 0.1728333657950687, 'FCD/TestSF': 28.493169764845874, 'SNN/TestSF': 0.5409301449181525, 'Frag/TestSF': 0.8260642282646463, 'Scaf/TestSF': 0.01978691640091146, 'IntDiv': 0.7344882593883815, 'IntDiv2': 0.7087242064584731, 'Filters': 0.994455169014663, 'logP': 0.21083619806700776, 'SA': 0.36084993695044487, 'QED': 0.08505511831410441, 'weight': 18.128354594551713, 'Novelty': 0.8985313751668892}
+Epoch: 36:
+	Train Loss: 0.481 --- Reconstruction Loss: 0.465 --- KL Loss: 76.546 --- Beta: 0.000208
+	Validity: 0.81% --- Uniquene@1000: 0.48% --- Unique@10000: 0.19%
+
+{'valid': 0.6911, 'unique@1000': 0.511, 'unique@10000': 0.2025, 'FCD/Test': 28.049258962798156, 'SNN/Test': 0.6496185139364233, 'Frag/Test': 0.8413104764023758, 'Scaf/Test': 0.19052563934472178, 'FCD/TestSF': 29.461502810373474, 'SNN/TestSF': 0.5318645330685262, 'Frag/TestSF': 0.8288624280179565, 'Scaf/TestSF': 0.03361685337662801, 'IntDiv': 0.706933405256384, 'IntDiv2': 0.682092446731035, 'Filters': 0.997829547098828, 'logP': 0.31304018918341003, 'SA': 0.4199670329425429, 'QED': 0.08276395352827114, 'weight': 12.928413615878407, 'Novelty': 0.9009562841530054}
+Epoch: 37:
+	Train Loss: 0.480 --- Reconstruction Loss: 0.460 --- KL Loss: 79.218 --- Beta: 0.000262
+	Validity: 0.69% --- Uniquene@1000: 0.51% --- Unique@10000: 0.20%
+
+{'valid': 0.8684666666666667, 'unique@1000': 0.621, 'unique@10000': 0.2654, 'FCD/Test': 24.317760565562807, 'SNN/Test': 0.6499876938688789, 'Frag/Test': 0.9042471689511591, 'Scaf/Test': 0.29678744382260736, 'FCD/TestSF': 25.87866851202466, 'SNN/TestSF': 0.5438944535682964, 'Frag/TestSF': 0.892136357251657, 'Scaf/TestSF': 0.020176303928588046, 'IntDiv': 0.769933935784495, 'IntDiv2': 0.7486273972207307, 'Filters': 0.9877178168419437, 'logP': 0.488583580268646, 'SA': 0.4196800421597925, 'QED': 0.02453897598403159, 'weight': 10.497296916489503, 'Novelty': 0.8792668957617411}
+Epoch: 38:
+	Train Loss: 0.475 --- Reconstruction Loss: 0.452 --- KL Loss: 71.439 --- Beta: 0.000316
+	Validity: 0.87% --- Uniquene@1000: 0.62% --- Unique@10000: 0.27%
+
+{'valid': 0.7686333333333333, 'unique@1000': 0.626, 'unique@10000': 0.2837, 'FCD/Test': 23.967997020509344, 'SNN/Test': 0.6424930076234343, 'Frag/Test': 0.8583013861648753, 'Scaf/Test': 0.22670056904959002, 'FCD/TestSF': 25.274728300886416, 'SNN/TestSF': 0.5448206910659394, 'Frag/TestSF': 0.8454502419577842, 'Scaf/TestSF': 0.027797330472858373, 'IntDiv': 0.7539987442855541, 'IntDiv2': 0.734244362891932, 'Filters': 0.9933648466976018, 'logP': 0.21098399689936603, 'SA': 0.40750632826507466, 'QED': 0.06315871719079563, 'weight': 8.386221539011451, 'Novelty': 0.8834080717488789}
+Epoch: 39:
+	Train Loss: 0.464 --- Reconstruction Loss: 0.444 --- KL Loss: 53.650 --- Beta: 0.000370
+	Validity: 0.77% --- Uniquene@1000: 0.63% --- Unique@10000: 0.28%
+
+{'valid': 0.7145333333333334, 'unique@1000': 0.629, 'unique@10000': 0.3027, 'FCD/Test': 25.07341348634172, 'SNN/Test': 0.60703843865244, 'Frag/Test': 0.874789298002746, 'Scaf/Test': 0.1640672304356241, 'FCD/TestSF': 26.688992242867727, 'SNN/TestSF': 0.5098857798000662, 'Frag/TestSF': 0.8611742436782501, 'Scaf/TestSF': 0.015570897517481308, 'IntDiv': 0.7519142819141682, 'IntDiv2': 0.7339832234081917, 'Filters': 0.9883373763761896, 'logP': 0.2987717279010915, 'SA': 0.33555966875206117, 'QED': 0.01665885456710527, 'weight': 6.05483933833427, 'Novelty': 0.8928421052631579}
+Epoch: 40:
+	Train Loss: 0.459 --- Reconstruction Loss: 0.437 --- KL Loss: 52.389 --- Beta: 0.000424
+	Validity: 0.71% --- Uniquene@1000: 0.63% --- Unique@10000: 0.30%
+
+{'valid': 0.7211666666666667, 'unique@1000': 0.769, 'unique@10000': 0.3899, 'FCD/Test': 21.52457982032545, 'SNN/Test': 0.627105116227055, 'Frag/Test': 0.8851617795572487, 'Scaf/Test': 0.3330047437296835, 'FCD/TestSF': 22.85169500919646, 'SNN/TestSF': 0.526194800142055, 'Frag/TestSF': 0.8721464631620921, 'Scaf/TestSF': 0.07270123836199804, 'IntDiv': 0.7717747605810019, 'IntDiv2': 0.754479027466273, 'Filters': 0.9908019412988214, 'logP': 0.5115783680351624, 'SA': 0.34793238159902184, 'QED': 0.04856588506913028, 'weight': 3.8236015165514834, 'Novelty': 0.9078175895765472}
+Epoch: 41:
+	Train Loss: 0.448 --- Reconstruction Loss: 0.430 --- KL Loss: 36.262 --- Beta: 0.000478
+	Validity: 0.72% --- Uniquene@1000: 0.77% --- Unique@10000: 0.39%
+
+{'valid': 0.6806333333333333, 'unique@1000': 0.785, 'unique@10000': 0.4484, 'FCD/Test': 18.985685306246417, 'SNN/Test': 0.6222331733266102, 'Frag/Test': 0.9457750112492834, 'Scaf/Test': 0.3358594220262484, 'FCD/TestSF': 19.870498563553255, 'SNN/TestSF': 0.5462475498319344, 'Frag/TestSF': 0.9383756818185434, 'Scaf/TestSF': 0.02096284956350747, 'IntDiv': 0.7857956829239277, 'IntDiv2': 0.7721318492519555, 'Filters': 0.9898623830745874, 'logP': 0.557718512267942, 'SA': 0.3585695145926243, 'QED': 0.026191055058034894, 'weight': 6.390479399741929, 'Novelty': 0.9144055944055944}
+Epoch: 42:
+	Train Loss: 0.439 --- Reconstruction Loss: 0.422 --- KL Loss: 31.359 --- Beta: 0.000532
+	Validity: 0.68% --- Uniquene@1000: 0.79% --- Unique@10000: 0.45%
+
+{'valid': 0.7641666666666667, 'unique@1000': 0.846, 'unique@10000': 0.5139, 'FCD/Test': 18.994976875726827, 'SNN/Test': 0.6170088954320261, 'Frag/Test': 0.9077786220874184, 'Scaf/Test': 0.2541909061653027, 'FCD/TestSF': 20.048484810173612, 'SNN/TestSF': 0.539817098218586, 'Frag/TestSF': 0.8978714032486397, 'Scaf/TestSF': 0.060024062459040795, 'IntDiv': 0.7961916616055625, 'IntDiv2': 0.7814137658995223, 'Filters': 0.9904034896401308, 'logP': 0.4601912038777567, 'SA': 0.3257925336938637, 'QED': 0.029447433320446942, 'weight': 7.938081568175803, 'Novelty': 0.8974953106035529}
+Epoch: 43:
+	Train Loss: 0.432 --- Reconstruction Loss: 0.415 --- KL Loss: 28.065 --- Beta: 0.000586
+	Validity: 0.76% --- Uniquene@1000: 0.85% --- Unique@10000: 0.51%
+
+{'valid': 0.7219, 'unique@1000': 0.817, 'unique@10000': 0.4978, 'FCD/Test': 19.214488064317493, 'SNN/Test': 0.6241617160952696, 'Frag/Test': 0.9237699744679412, 'Scaf/Test': 0.31635780576412564, 'FCD/TestSF': 20.36313528737916, 'SNN/TestSF': 0.5409879141602043, 'Frag/TestSF': 0.9142599043167259, 'Scaf/TestSF': 0.04091586876255582, 'IntDiv': 0.7893653222898653, 'IntDiv2': 0.7751663041845864, 'Filters': 0.9924273906819966, 'logP': 0.4900658014544467, 'SA': 0.3485133392460415, 'QED': 0.027047510591129933, 'weight': 7.874588497226337, 'Novelty': 0.8919176288537078}
+Epoch: 44:
+	Train Loss: 0.426 --- Reconstruction Loss: 0.410 --- KL Loss: 24.954 --- Beta: 0.000640
+	Validity: 0.72% --- Uniquene@1000: 0.82% --- Unique@10000: 0.50%
+
+{'valid': 0.7949333333333333, 'unique@1000': 0.828, 'unique@10000': 0.5409, 'FCD/Test': 18.487761347946517, 'SNN/Test': 0.6223772588526191, 'Frag/Test': 0.922999942442229, 'Scaf/Test': 0.28930654164661984, 'FCD/TestSF': 19.406929808946416, 'SNN/TestSF': 0.5438066007133919, 'Frag/TestSF': 0.9147458596535525, 'Scaf/TestSF': 0.02766352360498492, 'IntDiv': 0.7939094851853503, 'IntDiv2': 0.7804500698703111, 'Filters': 0.9897266018114727, 'logP': 0.474476115003892, 'SA': 0.3348029572776753, 'QED': 0.024627277562438207, 'weight': 10.736187346621824, 'Novelty': 0.8865105008077544}
+Epoch: 45:
+	Train Loss: 0.420 --- Reconstruction Loss: 0.404 --- KL Loss: 22.849 --- Beta: 0.000694
+	Validity: 0.79% --- Uniquene@1000: 0.83% --- Unique@10000: 0.54%
+
+{'valid': 0.8047666666666666, 'unique@1000': 0.879, 'unique@10000': 0.5932, 'FCD/Test': 18.29256430483528, 'SNN/Test': 0.620685509529741, 'Frag/Test': 0.9291409095455209, 'Scaf/Test': 0.2704090701977372, 'FCD/TestSF': 19.117998530727547, 'SNN/TestSF': 0.5530371908738038, 'Frag/TestSF': 0.9219541222545661, 'Scaf/TestSF': 0.03268915484974788, 'IntDiv': 0.7942528076710555, 'IntDiv2': 0.7817214916521599, 'Filters': 0.9876982976432093, 'logP': 0.4643989955525831, 'SA': 0.33888355963021466, 'QED': 0.020946413053708254, 'weight': 8.969435067394958, 'Novelty': 0.8899025131920222}
+Epoch: 46:
+	Train Loss: 0.414 --- Reconstruction Loss: 0.398 --- KL Loss: 20.919 --- Beta: 0.000748
+	Validity: 0.80% --- Uniquene@1000: 0.88% --- Unique@10000: 0.59%
+
+{'valid': 0.7774, 'unique@1000': 0.898, 'unique@10000': 0.623, 'FCD/Test': 16.36177081238766, 'SNN/Test': 0.6176791837897854, 'Frag/Test': 0.9354484521115162, 'Scaf/Test': 0.24992400452772223, 'FCD/TestSF': 17.092155636906426, 'SNN/TestSF': 0.5480819452563891, 'Frag/TestSF': 0.9281393386771513, 'Scaf/TestSF': 0.02487235016072953, 'IntDiv': 0.80317447438854, 'IntDiv2': 0.7909509587461561, 'Filters': 0.9800617442757911, 'logP': 0.42157667014677297, 'SA': 0.29921904931108084, 'QED': 0.021597299191855747, 'weight': 13.109132212755513, 'Novelty': 0.883406907296806}
+Epoch: 47:
+	Train Loss: 0.409 --- Reconstruction Loss: 0.393 --- KL Loss: 19.165 --- Beta: 0.000802
+	Validity: 0.78% --- Uniquene@1000: 0.90% --- Unique@10000: 0.62%
+
+slurmstepd: error: *** JOB 8257232 ON hpctpa3pc0061 CANCELLED AT 2024-02-15T10:04:48 ***

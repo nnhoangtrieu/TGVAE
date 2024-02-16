@@ -1,19 +1,19 @@
-scripts = ['python train.py --d_model 512 --d_latent 512 --d_ff 1024 --save_name "dimension"',
-'python train.py --d_model 512 --d_latent 256 --d_ff 1024 --save_name "dimension"',
-'python train.py --d_model 256 --d_latent 256 --d_ff 512 --save_name "dimension"',
-'python train.py --d_model 256 --d_latent 128 --d_ff 512 --save_name "dimension"',
-'python train.py --kl_w_start 0.0005 --kl_w_end 0.005 --save_name "kl_weight"',
-'python train.py --kl_w_start 0.0005 --kl_w_end 0.01 --save_name "kl_weight"',
-'python train.py --kl_w_start 0.0005 --kl_w_end 0.05 --save_name "kl_weight"',
-'python train.py --kl_w_start 0.001 --kl_w_end 0.005 --save_name "kl_weight"',
-'python train.py --kl_w_start 0.001 --kl_w_end 0.01 --save_name "kl_weight"',
-'python train.py --kl_w_start 0.001 --kl_w_end 0.05 --save_name "kl_weight"',
-'python train.py --n_epochs 40 --kl_w_start 0.0005 --kl_w_end 0.005 --save_name "kl_weight long epoch"',
-'python train.py --n_epochs 40 --kl_w_start 0.0005 --kl_w_end 0.01 --save_name "kl_weight long epoch"',
-'python train.py --n_epochs 40 --kl_w_start 0.0005 --kl_w_end 0.05 --save_name "kl_weight long epoch"',
-'python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.005 --save_name "kl_weight long epoch"',
-'python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.01 --save_name "kl_weight long epoch"',
-'python train.py --n_epochs 40 --kl_w_start 0.001 --kl_w_end 0.05 --save_name "kl_weight long epoch"'
+scripts = ['python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.001 --kl_cycle 2 --kl_ratio 1.0 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.01 --kl_cycle 2 --kl_ratio 1.0 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.001 --kl_cycle 4 --kl_ratio 1.0 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 6 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.01 --kl_cycle 4 --kl_ratio 1.0 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_w_start 0.0001 --kl_w_end 0.01 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.001 --kl_cycle 2 --kl_ratio 1.0 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.01 --kl_cycle 2 --kl_ratio 1.0 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.001 --kl_cycle 4 --kl_ratio 1.0 --save_name "43up"',
+'python train.py --max_len 57 --batch 128 --n_layers 8 --n_epochs 100 --kl_type "cyclic" --kl_w_start 0.0001 --kl_w_end 0.01 --kl_cycle 4 --kl_ratio 1.0 --save_name "43up"'
 ]
 
 
@@ -24,7 +24,7 @@ for i in range(len(scripts)) :
 #SBATCH --time 3-0
 #SBATCH -c 4
 #SBATCH --mem 40g
-#SBATCH --output graphvae-%j.out
+#SBATCH --output 43up/job-out/%j.out
 #SBATCH --gres=gpu:a30:1
                 
 ml Python 

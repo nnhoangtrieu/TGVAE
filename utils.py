@@ -107,6 +107,19 @@ def monotonic_annealer(n_epoch, kl_start, kl_w_start, kl_w_end):
 
     return annealing_weights
 
+def cyclic_annealer(start, stop, n_epoch, n_cycle=4, ratio=0.5):
+    L = np.ones(n_epoch) * stop
+    period = n_epoch/n_cycle
+    step = (stop-start)/(period*ratio) # linear schedule
+
+    for c in range(n_cycle):
+
+        v , i = start , 0
+        while v <= stop and (int(i+c*period) < n_epoch):
+            L[int(i+c*period)] = v
+            v += step
+            i += 1
+    return L
 
 def get_ei(smi) : 
     mol = rdkit.Chem.MolFromSmiles(smi) 

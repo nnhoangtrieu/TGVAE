@@ -20,14 +20,18 @@ class MyData(Data) :
 
 
 class ProcessData() : 
-    def __init__(self, path, max_len)  :
+    def __init__(self, path, max_len, node_feature_list = None, edge_index_list = None, token_list = None)  :
         self.path = path 
         self.max_len = max_len 
-
+        self.node_feature_list = node_feature_list 
+        self.edge_index_list = edge_index_list 
+        self.token_list = token_list
     def extract(self) : 
         if self.path.lower().endswith('.txt') : 
             with open(self.path, 'r') as f : 
-                data = [line.strip() for line in f if len(line) < self.max_len]
+                data = [line.strip() for line in f]
+                # data = [x for x in data if len(x) < self.max_len]
+                data = [x for x in data if len(x) < 50 and len(x) > 40]
                 return data  
         elif self.path.lower().endswith('.pickle')  : 
             with open(self.path, 'rb') as f : 
@@ -40,7 +44,7 @@ class ProcessData() :
     def get_gvocab(self, smi_list) :
         dic = {}
         for smi in smi_list :
-            mol = rdkit.Chem.MolFromSmiles(smi) 
+            mol = rdkit.Chem.MolFromSmiles(smi)
             for atom in mol.GetAtoms() : 
                 symbol = atom.GetSymbol() 
                 if symbol not in dic : 
@@ -93,13 +97,11 @@ class ProcessData() :
         self.gvocab = self.get_gvocab(self.smi_list)
         self.vocab = self.get_vocab(token_list)
         self.inv_vocab = {v:k for k,v in self.vocab.items()}
-
         token_list = [self.encode(smi) for smi in token_list]
-        self.max_len = max([len(x) for x in token_list])
-        token_list = [self.pad(smi) for smi in token_list]
-
+        self.max_len = len(max(token_list, key=len))
+        token_list = [self.pad(t) for t in token_list]
         node_feature_list = [self.get_nf(smi) for smi in self.smi_list]
         edge_index_list = [self.get_ei(smi) for smi in self.smi_list]
-
         data_list = [MyData(x=node_feature_list[i], edge_index=edge_index_list[i], smi=token_list[i]) for i in range(len(self.smi_list))]
+
         return data_list

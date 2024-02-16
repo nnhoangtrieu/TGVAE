@@ -130,7 +130,7 @@ class EncoderLayer(nn.Module) :
         self.drop2 = nn.Dropout(dropout)
         
     def forward(self, nf, ei) : 
-        nf = nf + self.drop1(self.attn(self.norm1(nf), ei))
+        nf = nf + self.drop1(self.attn(self.norm1(nf), ei).relu())
         nf = nf + self.drop2(self.feed_forward(self.norm2(nf)))
         return nf 
     
@@ -194,15 +194,15 @@ class Decoder(nn.Module):
 
 ######## Model ########
 class Transformer(nn.Module):
-    def __init__(self, d_model, d_latent, d_ff, num_head, num_layer, dropout, vocab, gvocab) : 
+    def __init__(self, d_model, d_latent, d_ff, e_heads, d_heads, num_layer, dropout, vocab, gvocab) : 
         super(Transformer, self).__init__()
         c = copy.deepcopy
 
-        attn = MultiHeadedAttention(num_head, d_model)
+        attn = MultiHeadedAttention(d_heads, d_model)
         ff = PositionwiseFeedForward(d_model, d_ff)
         position = PositionalEncoding(d_model, dropout)
 
-        self.encoder = Encoder(EncoderLayer(d_model, num_head, c(ff), dropout), num_layer, d_latent)
+        self.encoder = Encoder(EncoderLayer(d_model, e_heads, c(ff), dropout), num_layer, d_latent)
         self.decoder = Decoder(DecoderLayer(d_model, c(attn), c(attn), c(ff), dropout), num_layer, d_latent)
 
         self.src_embedding = nn.Embedding(len(gvocab), d_model)
