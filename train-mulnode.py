@@ -1,7 +1,6 @@
 import torch
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
-import data 
 from data import ProcessData
 import torch.multiprocessing as mp
 from torch.utils.data.distributed import DistributedSampler
@@ -10,19 +9,14 @@ from torch.distributed import init_process_group, destroy_process_group
 import os
 import torch
 from torch.utils.data import Dataset
-import torch_geometric 
 from torch_geometric.loader import DataLoader as gDataLoader
-import utils 
 from utils import monotonic_annealer, get_mask, parallel_f, seed_torch, cyclic_annealer
-import data 
 from data import ProcessData
-import model.base 
 from model.base import Transformer
 import argparse
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data_path', type=str, default='data/moses_train.txt')
 parser.add_argument('--max_len', type=int, default=30)
 parser.add_argument('--batch', type=int, default=128)
 
@@ -35,23 +29,41 @@ parser.add_argument('--n_layers', type=int, default=6)
 parser.add_argument('--dropout', type=float, default=0.5)
 
 parser.add_argument('--lr', type=float, default=5e-4)
-parser.add_argument('--n_epochs', type=int, default=30)
+parser.add_argument('--n_epochs', type=int, default=100)
 parser.add_argument('--kl_type', type=str, default="monotonic")
 parser.add_argument('--kl_w_start', type=float, default=0.0005)
 parser.add_argument('--kl_w_end', type=float, default=0.005)
 parser.add_argument('--kl_cycle', type=int, default=4)
 parser.add_argument('--kl_ratio', type=float, default=0.9)
-parser.add_argument('--save_name', type=str, default='mulgpu')
+
+parser.add_argument('--save_name', type=str, default='your_save_name')
+parser.add_argument('--save_every', type=int, default=1)
+
+parser.add_argument('--resume', type=bool, default=False)
+parser.add_argument('--save_epoch', type=int, default=0)
+
 arg = parser.parse_args()
 
 
-Data = ProcessData(arg.data_path, arg.max_len)
+if not os.path.exists(f'checkpoint/{arg.save_name}') : 
+    os.makedirs(f'checkpoint/{arg.save_name}')
+
+
+
+
+Data = ProcessData('data/moses_train.txt', arg.max_len)
 data_list, smi_list, vocab, inv_vocab, gvocab, max_len = (Data.process(),
                                                          Data.smi_list,
                                                          Data.vocab,
                                                          Data.inv_vocab,
                                                          Data.gvocab,
                                                          Data.max_len)
+
+config = vars(arg)
+config['vocab'] = vocab 
+config['gvocab'] = gvocab
+config['max_token_len'] = max_len 
+torch.save(vars(arg), f'checkpoint/{arg.save_name}/config.pt')
 
 print(f'\nNumber of data: {len(data_list)}')
 print(f'\nSMILES Vocab:\n\t {vocab}')
@@ -85,10 +97,18 @@ class Trainer:
         self.optimizer = optimizer
         self.save_every = save_every
         self.epochs_run = 0
-        self.snapshot_path = snapshot_path
-        if os.path.exists(snapshot_path):
-            print("Loading snapshot")
-            self._load_snapshot(snapshot_path)
+
+        if arg.resume : 
+            if os.path.exists(f'checkpoint/{arg.save_name}/snapshot_{arg.save_epoch}.pt'): 
+                self._load_snapshot(f'checkpoint/{arg.save_name}/snapshot_{arg.save_epoch}.pt')
+            else : 
+                print(f"No snapshot found at checkpoint/{arg.save_name}/snapshot_{arg.save_epoch}.pt")
+                
+
+        # self.snapshot_path = snapshot_path
+        # if os.path.exists(snapshot_path):
+        #     print("Loading snapshot")
+        #     self._load_snapshot(snapshot_path)
 
         self.model = DDP(self.model, device_ids=[self.local_rank])
 
@@ -96,16 +116,19 @@ class Trainer:
         loc = f"cuda:{self.local_rank}"
         snapshot = torch.load(snapshot_path, map_location=loc)
         self.model.load_state_dict(snapshot["MODEL_STATE"])
+        self.optimizer.load_state_dict(snapshot["OPTIMIZER_STATE"])
         self.epochs_run = snapshot["EPOCHS_RUN"]
         print(f"Resuming training from snapshot at Epoch {self.epochs_run}")
 
     def _run_batch(self, source, targets, targets_mask):
         self.optimizer.zero_grad()
         output, mu, sigma = self.model(source, targets[:, :-1], None, targets_mask)
-        # loss = F.cross_entropy(output, targets)
         loss, _, _ = loss_fn(output, targets[:, 1:], mu, sigma, self.beta)
         loss.backward()
         self.optimizer.step()
+        torch.cuda.empty_cache()
+
+
 
     def _run_epoch(self, epoch):
         b_sz = len(next(iter(self.train_data))[0])
@@ -117,13 +140,18 @@ class Trainer:
             tgt = src.clone().smi
             tgt_mask = get_mask(tgt[:, :-1], vocab) 
             self._run_batch(src, tgt, tgt_mask)
+
+
+
     def _save_snapshot(self, epoch):
         snapshot = {
             "MODEL_STATE": self.model.module.state_dict(),
+            "OPTIMIZER_STATE": self.optimizer.state_dict(),
             "EPOCHS_RUN": epoch,
         }
-        torch.save(snapshot, self.snapshot_path)
-        print(f"Epoch {epoch} | Training snapshot saved at {self.snapshot_path}")
+
+        torch.save(snapshot, f'checkpoint/{arg.save_name}/snapshot_{epoch}.pt')
+        print(f"Epoch {epoch} | Training snapshot saved at checkpoint/{arg.save_name}/snapshot_{epoch}.pt")
 
     def train(self, max_epochs: int):
         if arg.kl_type == 'monotonic' : 
@@ -154,8 +182,9 @@ def prepare_dataloader(dataset: Dataset, batch_size: int):
     )
 
 
-def main(save_every: int, total_epochs: int, batch_size: int, snapshot_path: str = "snapshot.pt"):
+def main(save_every: int, total_epochs: int, batch_size: int, snapshot_path: str = f"snapshot.pt"):
     ddp_setup()
+    seed_torch()
     dataset, model, optimizer = load_train_objs()
     train_data = prepare_dataloader(dataset, batch_size)
     trainer = Trainer(model, train_data, optimizer, save_every, snapshot_path)
@@ -163,29 +192,7 @@ def main(save_every: int, total_epochs: int, batch_size: int, snapshot_path: str
     destroy_process_group()
 
 
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('--data_path', type=str, default='data/moses_train.txt')
-#     parser.add_argument('--max_len', type=int, default=30)
-#     parser.add_argument('--batch', type=int, default=128)
-
-#     parser.add_argument('--d_model', type=int, default=512)
-#     parser.add_argument('--d_latent', type=int, default=256)
-#     parser.add_argument('--d_ff', type=int, default=1024)
-#     parser.add_argument('--e_heads', type=int, default=1)
-#     parser.add_argument('--d_heads', type=int, default=8)
-#     parser.add_argument('--n_layers', type=int, default=6)
-#     parser.add_argument('--dropout', type=float, default=0.5)
-
-#     parser.add_argument('--lr', type=float, default=5e-4)
-#     parser.add_argument('--n_epochs', type=int, default=30)
-#     parser.add_argument('--kl_type', type=str, default="monotonic")
-#     parser.add_argument('--kl_w_start', type=float, default=0.0005)
-#     parser.add_argument('--kl_w_end', type=float, default=0.005)
-#     parser.add_argument('--kl_cycle', type=int, default=4)
-#     parser.add_argument('--kl_ratio', type=float, default=0.9)
-#     parser.add_argument('--save_name', type=str, default='mulgpu')
-#     arg = parser.parse_args()
 
 
-main(10, arg.n_epochs, arg.batch)
+
+main(arg.save_every, arg.n_epochs, arg.batch)
