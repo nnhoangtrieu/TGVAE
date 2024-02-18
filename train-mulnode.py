@@ -9,6 +9,7 @@ from torch.distributed import init_process_group, destroy_process_group
 import os
 import torch
 from torch.utils.data import Dataset
+from torch.nn.utils import clip_grad_norm_
 from torch_geometric.loader import DataLoader as gDataLoader
 from utils import monotonic_annealer, get_mask, parallel_f, seed_torch, cyclic_annealer
 from data import ProcessData
@@ -127,6 +128,7 @@ class Trainer:
         loss.backward()
         self.optimizer.step()
         torch.cuda.empty_cache()
+        clip_grad_norm_(self.model.parameters(), 0.5)
 
 
 

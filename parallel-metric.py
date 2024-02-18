@@ -29,7 +29,7 @@ if not os.path.exists(f'checkpoint/{arg.save_name}') :
 
 config = torch.load(f'checkpoint/{arg.save_name}/config.pt')
 inv_vocab = {v: k for k, v in config['vocab'].items()}
-
+print(config)
 model = Transformer(
     d_model=config['d_model'],
     d_latent=config['d_latent'],
@@ -48,11 +48,12 @@ processed = []
 
 while True :
     model.eval() 
-    print('Sleeping')
+    print('Sleeping...')
     time.sleep(10)
     for epoch in range(len(os.listdir(f'checkpoint/{arg.save_name}')) - 1) :
         if epoch not in processed : 
-            if epoch < 30 : 
+            if epoch < 5 : 
+                print('Epoch < 30')
                 continue
             processed.append(epoch)
             model.load_state_dict(torch.load(f'checkpoint/{arg.save_name}/snapshot_{epoch}.pt')['MODEL_STATE'])
