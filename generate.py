@@ -10,17 +10,15 @@ current = datetime.datetime.now()
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--save_name', type=str, default='None')
+parser.add_argument('--save_name', type=str, default='test')
 parser.add_argument('--num_gen', type=int, default=30000)
-parser.add_argument('--get_metric', type=bool, default=True)
-
+parser.add_argument('--get_metric', type=int, default=1)
 arg = parser.parse_args()
 
 if not os.path.exists(f'checkpoint/{arg.save_name}') and arg.save_name != 'None' :
     print('Path not exists')
     print('Please look into folder checkpoint/single-gpu and choose the name of folder that you want to load the model from')
     exit()
-
 
 print('Model found, loading model...\n')
 
@@ -97,12 +95,12 @@ with torch.no_grad() :
         for i, mol in enumerate(gen_mol) : 
             f.write(f'{i+1}. {mol}\n')
 
-    if arg.get_metric == True :
+    if arg.get_metric == 1 :
         print('Calculating metrics...')
         result = metrics.get_all_metrics(gen_mol, k=(10000, 20000, 25000, 30000))
     else :
         print('Skip calculating metrics...')
-        
+        exit()
 
     for name, value in result.items() : 
         print(f'\t{name}: {value:.4f}')
