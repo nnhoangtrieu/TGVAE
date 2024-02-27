@@ -16,7 +16,7 @@ parser.add_argument('--get_metric', type=bool, default=True)
 
 arg = parser.parse_args()
 
-if not os.path.exists(f'checkpoint/single-gpu/{arg.save_name}') and arg.save_name != 'None' :
+if not os.path.exists(f'checkpoint/{arg.save_name}') and arg.save_name != 'None' :
     print('Path not exists')
     print('Please look into folder checkpoint/single-gpu and choose the name of folder that you want to load the model from')
     exit()
@@ -47,7 +47,7 @@ def parallel_f(f, input_list) :
 
 
 
-config = torch.load(f'checkpoint/single-gpu/{arg.save_name}/config.pt') 
+config = torch.load(f'checkpoint/{arg.save_name}/config.pt') 
 inv_vocab = {v: k for k, v in config['vocab'].items()}
 
 model = Transformer(
@@ -63,7 +63,7 @@ model = Transformer(
 ).to(device)
 
 try :
-    model.load_state_dict(torch.load(f'checkpoint/single-gpu/{arg.save_name}/model.pt')['MODEL_STATE'])
+    model.load_state_dict(torch.load(f'checkpoint/{arg.save_name}/model.pt')['MODEL_STATE'])
     print('Model loaded successfully')
 except : 
     print('Model not found')
