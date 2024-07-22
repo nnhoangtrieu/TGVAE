@@ -3,7 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch_geometric.nn as gnn
 import sys 
-sys.path.append('/home/80027464/TGVAE/model/')
+import os
+home_directory = os.path.expanduser('~')
+model_path = os.path.join(home_directory, 'TGVAE', 'model')
+sys.path.append(model_path)
 from sublayer import * 
 
 
