@@ -14,7 +14,7 @@ parser.add_argument('-d', '--divisor', type=int, default=20)
 arg = parser.parse_args()
 
 
-model_folder = f'./output/checkpoint/{arg.name}'
+model_folder = f'output/checkpoint/{arg.name}'
 processed_folder = 'data/processed'
 output_folder = f'output/generate/{arg.name}'
 
