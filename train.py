@@ -9,25 +9,20 @@ if __name__ == '__main__' :
 
     config = get_train_config()
 
-
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')   
-
 
     train_set, vocab_smi, vocab_graph, max_token = get_dataset(config.path_train_raw_file, config.path_train_processed_folder)
     test_set, _, _, _ = get_dataset(config.path_test_raw_file, config.path_test_processed_folder)
     
-
     os.makedirs(config.path_checkpoint_folder, exist_ok=True)
     update_config(config, {'vocab_smi': vocab_smi,
                            'vocab_graph': vocab_graph,
                            'max_token': max_token})
 
-
     train_loader = DataLoader(train_set, batch_size=config.batch, shuffle=True)
     test_loader = DataLoader(test_set, batch_size=config.batch, shuffle=False)
 
     model, optim, annealer = get_model(config, device)
-
 
     for e in range(config.trained_epoch + 1, config.epoch + 1) : 
         train_loss, test_loss = 0, 0
