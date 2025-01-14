@@ -192,9 +192,9 @@ def recon_loss_fn(pred, tgt, vocab) :
 def kl_loss_fn(mu, sigma, batch) : 
     return -0.5 * torch.sum(1 + sigma - mu.pow(2) - sigma.exp()) / batch
 
-def loss_fn(out, tgt, config) :
+def loss_fn(out, tgt, beta, config) :
     pred, mu, sigma = out
-    vocab, beta, batch = config.vocab_smi, config.beta, config.batch
+    vocab, batch = config.vocab_smi, config.batch
     return recon_loss_fn(pred, tgt, vocab) + beta * kl_loss_fn(mu, sigma, batch)
 
 def process_smi(smi, vocab) : 

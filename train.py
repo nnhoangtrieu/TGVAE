@@ -42,7 +42,7 @@ if __name__ == '__main__' :
             for data in tqdm(test_loader, desc=f'Testing epoch {e}') : 
                 inp_graph, inp_smi, inp_smi_mask, tgt_smi = convert_data(data, vocab_smi, device=device)
                 output = model(inp_graph, inp_smi, inp_smi_mask)
-                loss = loss_fn(output, tgt_smi, config)
+                loss = loss_fn(output, tgt_smi, annealer[e], config)
                 test_loss += loss.item() 
 
         print(f'Epoch {e} - Train loss: {train_loss/len(train_loader):.2f} / Test loss: {test_loss/len(test_loader):.2f}')
