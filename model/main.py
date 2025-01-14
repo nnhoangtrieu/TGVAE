@@ -2,8 +2,6 @@ import torch
 import torch.nn as nn 
 import torch.nn.functional as F
 import torch_geometric.nn as gnn
-import sys 
-import os
 from model.sublayer import * 
 
 
@@ -27,10 +25,6 @@ class EncoderLayer(nn.Module) :
         nf = nf + F.leaky_relu(self.norm1(self.attn1(self.drop1(nf), ei, ew)))
         nf = nf + F.leaky_relu(self.norm2(self.attn2(self.drop2(nf), ei, ew)))
         nf = nf + F.leaky_relu(self.norm3(self.feed_forward(self.drop3(nf))))
-
-        # nf = nf + self.attn1(self.drop1(F.leaky_relu(self.norm1(nf))), ei, ew)
-        # nf = nf + self.attn2(self.drop2(F.leaky_relu(self.norm2(nf))), ei, ew)
-        # nf = nf + self.feed_forward(self.drop3(F.leaky_relu(self.norm3(nf))))
         return nf
     
 
@@ -95,22 +89,7 @@ class Decoder(nn.Module) :
         return self.norm(x)
     
 
-class GraphEmbedding(nn.Module) :
-    def __init__(self, size_vocab, dim, num_head, dropout) : 
-        super(GraphEmbedding, self).__init__()
-        self.embedding = Embeddings(size_vocab, dim)
-        self.gnn = gnn.GATConv(size_vocab, dim, num_head, dropout=dropout)
-    def forward(self, x, ei, ew) : 
-        return F.leaky_relu(self.gnn(self.embedding(x), ei, ew))
 
-
-class SmilesEmbedding(nn.Module) :
-    def __init__(self, size_vocab, dim, dropout) : 
-        super(SmilesEmbedding, self).__init__()
-        self.embedding = Embeddings(dim, size_vocab)
-        self.positional_encoding = PositionalEncoding(dim, dropout)
-    def forward(self, x) : 
-        return self.positional_encoding(self.embedding(x))
 
 class TGVAE(nn.Module) : 
     def __init__(self,
