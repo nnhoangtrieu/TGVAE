@@ -145,8 +145,8 @@ class TGVAE(nn.Module) :
     def forward(self, graph, smi, smi_mask) : 
         node_feature, edge_index, edge_attr, batch = graph.x, graph.edge_index, graph.edge_attr, graph.batch
 
-        node_feature = self.graph_embedding(node_feature, edge_index, edge_attr)
         edge_attr = self.edge_embedding(edge_attr)
+        node_feature = self.graph_embedding(node_feature, edge_index, edge_attr)
         smi = self.smi_embedding(smi)
 
         pool = self.encoder(node_feature, edge_index, edge_attr, batch)

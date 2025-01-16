@@ -133,7 +133,7 @@ class GraphEmbedding(nn.Module) :
     def __init__(self, size_vocab, dim, num_head, dropout) : 
         super(GraphEmbedding, self).__init__()
         self.embedding = Embeddings(dim, size_vocab)
-        self.gnn = gnn.GATConv(size_vocab, dim, num_head, dropout=dropout)
+        self.gnn = gnn.GATv2Conv(dim, dim//num_head, heads=num_head, dropout=dropout, edge_dim=dim)
     def forward(self, x, ei, ew) : 
         return F.leaky_relu(self.gnn(self.embedding(x), ei, ew))
 
