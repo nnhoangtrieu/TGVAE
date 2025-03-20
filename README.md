@@ -1,5 +1,7 @@
 # TGVAE: Transformer Graph Variational Autoencoder for Generative Molecular Design 
 
+Transformer Graph Variational Autoencoder (TGVAE), an innovative AI model that employs molecular graphs as input data, thus captures the complex structural relationships within molecules more effectively than string models. To enhance molecular generation capabilities, TGVAE combines a Transformer, Graph Neural Network (GNN), and Variational Autoencoder (VAE). Additionally, we address common issues like over-smoothing in training GNNs and posterior collapse in VAE to ensure robust training and improve the generation of chemically valid and diverse molecular structures.
+
 ## Installation 
 - Python 3.7+
 
@@ -13,7 +15,7 @@ pip install requirements.txt
 
 ### Training 
 ```bash
-python train.py 
+python train.py -n <name_of_experiment>
 ```
 ### Arguments
 This section describes the various hyperparameters used in the training code. They are grouped into model, training, loss function, and miscellaneous hyperparameters. Each parameter can be set via command-line arguments, allowing you to fine-tune the model architecture and training process.
@@ -61,6 +63,16 @@ This section describes the various hyperparameters used in the training code. Th
 
 
 ### Generate molecules
-```bash
-python generate.py 
-```
+
+### Arguments
+
+* `-n/--name`: Optional identifier for the generation process.
+* `-s/--snapshot`: Snapshot version to use.
+* `-pcf/--path_config`: Path to the configuration file.
+* `-pss/--path_snapshot`: Path to the snapshot file containing model weights.
+* `-ng/--num_gen`: Total number of samples to generate (default is 10,000).
+* `-b/--batch`: Number of samples to generate in each batch. If generating more than 5000 samples, the batch size must be provided. If not provided, it defaults to the total number of samples.
+* `-o/--output`: Output file path for the generated samples. If the provided name does not end with `.txt`, the script appends the extension. If not specified, the script generates a file name based on the current timestamp.
+
+---
+
