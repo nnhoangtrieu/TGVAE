@@ -20,146 +20,42 @@ This section describes the various hyperparameters used in the training code. Th
 
 #### Model Hyperparameters
 
-- **`--train` (`-tr`)**  
-  *Type:* `str`  
-  *Default:* `moses_train.txt`  
-  *Description:* Path to the training data file.
-
-- **`--dim_encoder` (`-de`)**  
-  *Type:* `int`  
-  *Default:* `512`  
-  *Description:* Dimension of the encoder's output representation.
-
-- **`--dim_decoder` (`-dd`)**  
-  *Type:* `int`  
-  *Default:* `512`  
-  *Description:* Dimension of the decoder's output representation.
-
-- **`--dim_latent` (`-dl`)**  
-  *Type:* `int`  
-  *Default:* `256`  
-  *Description:* Dimension of the latent space representation (often used in variational models).
-
-- **`--dim_encoder_ff` (`-def`)**  
-  *Type:* `int`  
-  *Default:* `512`  
-  *Description:* Dimension of the encoder feed-forward layer.
-
-- **`--dim_decoder_ff` (`-ddf`)**  
-  *Type:* `int`  
-  *Default:* `512`  
-  *Description:* Dimension of the decoder feed-forward layer.
-
-- **`--num_encoder_layer` (`-nel`)**  
-  *Type:* `int`  
-  *Default:* `4`  
-  *Description:* Number of layers in the encoder.
-
-- **`--num_decoder_layer` (`-ndl`)**  
-  *Type:* `int`  
-  *Default:* `4`  
-  *Description:* Number of layers in the decoder.
-
-- **`--num_encoder_head` (`-neh`)**  
-  *Type:* `int`  
-  *Default:* `1`  
-  *Description:* Number of attention heads in the encoder.
-
-- **`--num_decoder_head` (`-ndh`)**  
-  *Type:* `int`  
-  *Default:* `16`  
-  *Description:* Number of attention heads in the decoder.
-
-- **`--dropout_encoder` (`-doe`)**  
-  *Type:* `float`  
-  *Default:* `0.3`  
-  *Description:* Dropout rate applied in the encoder to prevent overfitting.
-
-- **`--dropout_gat` (`-dog`)**  
-  *Type:* `float`  
-  *Default:* `0.3`  
-  *Description:* Dropout rate for the graph attention mechanism (if applicable).
-
-- **`--dropout_decoder` (`-dod`)**  
-  *Type:* `float`  
-  *Default:* `0.3`  
-  *Description:* Dropout rate applied in the decoder to prevent overfitting.
+* `-tr/--train`: Path to the training data file. Default: `moses_train.txt`
+* `-de/--dim_encoder`: Dimension of the encoder's output representation. Default: `512`
+* `-dd/--dim_decoder`: Dimension of the decoder's output representation. Default: `512`
+* `-dl/--dim_latent`: Dimension of the latent space representation (often used in variational models). Default: `256`
+* `-def/--dim_encoder_ff`: Dimension of the encoder feed-forward layer. Default: `512`
+* `-ddf/--dim_decoder_ff`: Dimension of the decoder feed-forward layer. Default: `512`
+* `-nel/--num_encoder_layer`: Number of layers in the encoder. Default: `4`
+* `-ndl/--num_decoder_layer`: Number of layers in the decoder. Default: `4`
+* `-neh/--num_encoder_head`: Number of attention heads in the encoder. Default: `1`
+* `-ndh/--num_decoder_head`: Number of attention heads in the decoder. Default: `16`
+* `-doe/--dropout_encoder`: Dropout rate applied in the encoder to prevent overfitting. Default: `0.3`
+* `-dog/--dropout_gat`: Dropout rate for the graph attention mechanism (if applicable). Default: `0.3`
+* `-dod/--dropout_decoder`: Dropout rate applied in the decoder to prevent overfitting. Default: `0.3`
 
 #### Training Hyperparameters
 
-- **`--batch` (`-b`)**  
-  *Type:* `int`  
-  *Default:* `128`  
-  *Description:* Batch size used during training.
-
-- **`--epoch` (`-e`)**  
-  *Type:* `int`  
-  *Default:* `40`  
-  *Description:* Total number of training epochs.
-
-- **`--gradient_clipping` (`-gc`)**  
-  *Type:* `float`  
-  *Default:* `5.0`  
-  *Description:* Maximum allowed value for gradient clipping. Helps in preventing exploding gradients.
+* `-b/--batch`: Batch size used during training. Default: `128`
+* `-e/--epoch`: Total number of training epochs. Default: `40`
+* `-gc/--gradient_clipping`: Maximum allowed value for gradient clipping. Helps in preventing exploding gradients. Default: `5.0`
 
 #### Loss Function Hyperparameters
 
-- **`--loss_kl` (`-lkl`)**  
-  *Type:* `str`  
-  *Default:* `mean`  
-  *Description:* Specifies the type of KL-divergence loss computation (e.g., `mean` or other reduction methods).
-
-- **`--learning_rate` (`-lr`)**  
-  *Type:* `float`  
-  *Default:* `5e-4`  
-  *Description:* Learning rate for the optimizer.
-
-- **`--weight_decay` (`-wd`)**  
-  *Type:* `float`  
-  *Default:* `1e-6`  
-  *Description:* Weight decay (L2 regularization) factor applied during training.
-
-- **`--anneal_epoch_start` (`-aes`)**  
-  *Type:* `int`  
-  *Default:* `0`  
-  *Description:* Epoch from which annealing of certain parameters (like KL weight) starts.
-
-- **`--anneal_weight_start` (`-aws`)**  
-  *Type:* `float`  
-  *Default:* `0.00005`  
-  *Description:* Initial annealing weight for the loss function.
-
-- **`--anneal_weight_end` (`-awe`)**  
-  *Type:* `float`  
-  *Default:* `1.0`  
-  *Description:* Final annealing weight target.
+* `-lkl/--loss_kl`: Specifies the type of KL-divergence loss computation (e.g., `mean` or other reduction methods). Default: `mean`
+* `-lr/--learning_rate`: Learning rate for the optimizer. Default: `5e-4`
+* `-wd/--weight_decay`: Weight decay (L2 regularization) factor applied during training. Default: `1e-6`
+* `-aes/--anneal_epoch_start`: Epoch from which annealing of certain parameters (like KL weight) starts. Default: `0`
+* `-aws/--anneal_weight_start`: Initial annealing weight for the loss function. Default: `0.00005`
+* `-awe/--anneal_weight_end`: Final annealing weight target. Default: `1.0`
 
 #### Other Hyperparameters
 
-- **`--save_every` (`-se`)**  
-  *Type:* `int`  
-  *Default:* `1`  
-  *Description:* Frequency (in epochs) at which the model is saved.
-
-- **`--generate_every` (`-ge`)**  
-  *Type:* `int`  
-  *Default:* `1`  
-  *Description:* Frequency (in epochs) at which sample generations are performed.
-
-- **`--start_save` (`-ss`)**  
-  *Type:* `int`  
-  *Default:* `5`  
-  *Description:* Epoch from which model saving starts.
-
-- **`--start_generate` (`-sg`)**  
-  *Type:* `int`  
-  *Default:* `5`  
-  *Description:* Epoch from which sample generation starts.
-
-- **`--name` (`-n`)**  
-  *Type:* `str`  
-  *Default:* `experiment_1`  
-  *Description:* Name or identifier for the experiment. Useful for logging and saving checkpoints.
+* `-se/--save_every`: Frequency (in epochs) at which the model is saved. Default: `1`
+* `-ge/--generate_every`: Frequency (in epochs) at which sample generations are performed. Default: `1`
+* `-ss/--start_save`: Epoch from which model saving starts. Default: `5`
+* `-sg/--start_generate`: Epoch from which sample generation starts. Default: `5`
+* `-n/--name`: Name or identifier for the experiment. Useful for logging and saving checkpoints. Default: `experiment_1`
 
 ---
 
