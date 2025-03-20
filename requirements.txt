@@ -1,0 +1,4 @@
+torch==2.2.0
+torch_geometric==2.4.0
+rdkit==2023.9.2
+numpy==1.26.2
