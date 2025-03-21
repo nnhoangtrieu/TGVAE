@@ -36,7 +36,7 @@ if __name__ == '__main__' :
     model = get_model(config, device, generate_snapshot=snapshot)
 
     for _ in tqdm(range(arg.num_gen // arg.batch), desc='Generating') : 
-        smi_token = model.generate(config, arg.num_gen // arg.batch)
+        smi_token = model.generate(config, arg.batch)
         smi = convert_token(smi_token, config.vocab_smi)
         save(smi, arg.output, mode='a')
 

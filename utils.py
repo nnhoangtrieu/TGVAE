@@ -305,7 +305,7 @@ def generate_molecule(model, config, num_gen, path, batch=500) :
     model.eval()
     with torch.no_grad() :
         for _ in tqdm(range(num_gen // batch), desc='Generating') : 
-            smi_token = model.generate(config, num_gen // batch)
+            smi_token = model.generate(config, num_gen=batch)
             smi = convert_token(smi_token, config.vocab_smi)
             save(smi, path, mode='a')
 
