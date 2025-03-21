@@ -66,13 +66,27 @@ This section describes the various hyperparameters used in the training code. Th
 
 ### Arguments
 
-* `-n/--name`: Optional identifier for the generation process.
-* `-s/--snapshot`: Snapshot version to use.
-* `-pcf/--path_config`: Path to the configuration file.
-* `-pss/--path_snapshot`: Path to the snapshot file containing model weights.
-* `-ng/--num_gen`: Total number of samples to generate (default is 10,000).
-* `-b/--batch`: Number of samples to generate in each batch. If generating more than 5000 samples, the batch size must be provided. If not provided, it defaults to the total number of samples.
-* `-o/--output`: Output file path for the generated samples. If the provided name does not end with `.txt`, the script appends the extension. If not specified, the script generates a file name based on the current timestamp.
+* `-n/--name`: Name of the model to generate molecules. This should correspond to the folder name in /checkpoint. Note: When using this argument, you must also specify the snapshot version.
+* `-s/--snapshot`: Snapshot version to be used with the chosen model.
+* `-pcf/--path_config`: File path to the configuration file for the model. Note: When using this argument, you must also provide the snapshot file path.
+* `-pss/--path_snapshot`: File path to the snapshot containing the model weights.
+* `-ng/--num_gen`: Number of molecules to generate. Default: `30000`
+* `-b/--batch`: Number of molecules to generate per batch. Default: `500`. Tip: If you experience memory issues, try lowering this value.
+* `-o/--output`: Output file path for the generated samples. Note: If not specified, the script automatically generates a file name based on the current timestamp.
+
+### Example
+
+- **Example 1:** Generate 20,000 molecules using the model `experiment_1` at snapshot `35` with a batch size of `200`:
+
+  ```bash
+  python generate.py -n 'experiment_1' -s 35 -ng 20000 -b 200
+  ```
+
+- **Example 2:** Generate 10,000 molecules using the model configuration at `/experiment_2/config.json` and snapshot file at `/path/snapshot_30.pt`, with a batch size of `500`, saving the output to `run1.txt`:
+
+  ```bash
+  python generate.py -pcf '/experiment_2/config.json' -pss '/path/snapshot_30.pt' -ng 10000 -b 500 -o 'run1.txt'
+  ```
 
 ---
 
