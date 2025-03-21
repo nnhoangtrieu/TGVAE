@@ -23,40 +23,14 @@ path_checkpoint_folder = op.join(path_script, 'checkpoint')
 path_data_folder = op.join(path_script, 'data') 
 
 
-def get_generate_arg() : 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--name', type=str, default=None)
-    parser.add_argument('-s', '--snapshot', type=int, default=0)
 
-    parser.add_argument('-pcf', '--path_config', type=str, default=None)
-    parser.add_argument('-pss', '--path_snapshot', type=str, default=None)
-
-    parser.add_argument('-ng', '--num_gen', type=int, default=10000)
-    parser.add_argument('-b', '--batch', type=int, default=200)
-    parser.add_argument('-o', '--output', type=str, default=None)
-
-    arg = parser.parse_args()
-
-    if arg.num_gen >= 5000 and arg.batch is None : 
-        print('Batch size must be specified when generating more than 5000 samples'); exit()
-    elif not arg.batch : 
-        arg.batch = arg.num_gen
-
-    
-    if arg.output and not arg.output.endswith('.txt') : 
-        arg.output += '.txt'
-    if not arg.output : 
-        arg.output = datetime.datetime.now().strftime('%Y%m%d%H%M%S') + '.txt'
-        print(f'-o --output is not specified. Generated data will be saved to {arg.output}')
-    return arg
 
 def get_generate_path(arg) : 
     path_script = op.dirname(op.abspath(__file__))
     path_checkpoint = op.join(path_script, 'checkpoint', arg.name)
-    path_output = op.join(path_script, 'data', 'generate', arg.output)
     path_config = arg.path_config if arg.path_config else op.join(path_checkpoint, 'config.json')
     path_snapshot = arg.path_snapshot if arg.path_snapshot else op.join(path_checkpoint, f'snapshot_{arg.snapshot}.pt') 
-    return path_config, path_snapshot, path_output
+    return path_config, path_snapshot
 
 def get_train_config() : 
     parser = argparse.ArgumentParser()
