@@ -18,7 +18,6 @@ pip install requirements.txt
 python train.py -n <name_of_experiment>
 ```
 ### Arguments
-This section describes the various hyperparameters used in the training code. They are grouped into model, training, loss function, and miscellaneous hyperparameters. Each parameter can be set via command-line arguments, allowing you to fine-tune the model architecture and training process.
 
 #### Model Hyperparameters
 
