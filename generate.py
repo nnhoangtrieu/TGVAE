@@ -6,7 +6,6 @@ from argparse import Namespace
 
 if __name__ == '__main__' : 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  
-
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', type=str, default=None)
     parser.add_argument('-s', '--snapshot', type=int, default=0)
@@ -23,7 +22,7 @@ if __name__ == '__main__' :
         output = op.join(arg.output, f'{time}.txt')
     else : 
         if arg.output.endswith('.txt') : 
-            output = arg.ouput 
+            output = arg.output 
         else : 
             output = time + '.txt'
 
@@ -34,10 +33,10 @@ if __name__ == '__main__' :
 
     config = Namespace(**load(path_config))
     snapshot = load(path_snapshot)
-    model = get_model(config, device, snapshot)
+    model = get_model(config, device, generate_snapshot=snapshot)
 
     for _ in tqdm(range(arg.num_gen // arg.batch), desc='Generating') : 
-        smi_token = model.generate(config, arg.num_gen)
+        smi_token = model.generate(config, arg.num_gen // arg.batch)
         smi = convert_token(smi_token, config.vocab_smi)
         save(smi, arg.output, mode='a')
 

@@ -114,7 +114,7 @@ def load_processed_data(path) :
        dataset = load(op.join(path, 'data.pt')); pbar.update(1)
     return dataset, vocab_smi, vocab_graph, max_token
 
-def get_model(config, device) :
+def get_model(config, device, generate_snapshot=None) :
     model = TGVAE(dim_encoder=config.dim_encoder,
                     dim_decoder=config.dim_decoder,
                     dim_encoder_ff=config.dim_encoder_ff,
@@ -130,7 +130,9 @@ def get_model(config, device) :
                     size_graph_vocab=len(config.vocab_graph),
                     size_smi_vocab=len(config.vocab_smi),
                     device=device).to(device)
-
+    if generate_snapshot : 
+        model.load_state_dict(generate_snapshot['MODEL_STATE'])
+        return model
     if config.trained_epoch == 0 : 
         optim = torch.optim.Adam(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
     else : 
@@ -299,11 +301,11 @@ def get_mask(target, smi_vocab) :
     mask = (target != smi_vocab['[PAD]']).unsqueeze(-2)
     return mask & subsequent_mask(target.size(-1)).type_as(mask.data)
 
-def generate_molecule(model, config, num_gen, path, batch=200) : 
+def generate_molecule(model, config, num_gen, path, batch=500) : 
     model.eval()
     with torch.no_grad() :
         for _ in tqdm(range(num_gen // batch), desc='Generating') : 
-            smi_token = model.generate(config, num_gen)
+            smi_token = model.generate(config, num_gen // batch)
             smi = convert_token(smi_token, config.vocab_smi)
             save(smi, path, mode='a')
 
